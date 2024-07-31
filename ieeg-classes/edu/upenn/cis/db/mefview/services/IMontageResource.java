@@ -27,7 +27,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import org.ietf.annotations.PATCH;
+import org.ietf.annotations.*;
 
 @Path("montages")
 public interface IMontageResource {

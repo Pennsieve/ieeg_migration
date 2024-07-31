@@ -25,7 +25,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
-import org.ietf.annotations.PATCH;
+import org.ietf.annotations.*;
 
 @Path("layers")
 public interface ILayerResource {
