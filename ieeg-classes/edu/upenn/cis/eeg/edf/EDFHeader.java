@@ -374,6 +374,28 @@ public final class EDFHeader
 		DecimalFormat df = new DecimalFormat("#.######", dfs);
 
 		ByteBuffer bb = ByteBuffer.allocate(bytesInHeader);
+		System.out.println("bb: " + bb);
+		System.out.println("ID Code " + idCode);
+		System.out.println("ID Code Size " + IDENTIFICATION_CODE_SIZE);
+		System.out.println("Local Subject ID " + subjectID);
+		System.out.println("Local Subject ID Size " + LOCAL_SUBJECT_IDENTIFICATION_SIZE);
+		System.out.println("Recording ID " + recordingID);
+		System.out.println("Recording ID Size " + LOCAL_REOCRDING_IDENTIFICATION_SIZE);
+		System.out.println("Start Date " + startDate);
+		System.out.println("Start Date Size " + START_DATE_SIZE);
+		System.out.println("Start Time " + startTime);
+		System.out.println("Start Time Size " + START_TIME_SIZE);
+		System.out.println("Header " + bytesInHeader);
+		System.out.println("Header Size " + HEADER_SIZE);
+		System.out.println("Data Format Version " + formatVersion);
+		System.out.println("Data Format Version Size " + DATA_FORMAT_VERSION_SIZE);
+		System.out.println("Number of Data Records " + numberOfRecords);
+		System.out.println("Number of Data Records Size " + NUMBER_OF_DATA_RECORDS_SIZE);
+		System.out.println("Duration Data Records " + durationOfRecords);
+		System.out.println("Duration Data Records Size " + DURATION_DATA_RECORDS_SIZE);
+		System.out.println("Number of Chanels " + numberOfChannels);
+		System.out.println("Number of Chanels Size " + NUMBER_OF_CHANELS_SIZE);
+
 		putIntoBuffer(bb, IDENTIFICATION_CODE_SIZE, idCode);
 		putIntoBuffer(bb, LOCAL_SUBJECT_IDENTIFICATION_SIZE, subjectID);
 		putIntoBuffer(bb, LOCAL_REOCRDING_IDENTIFICATION_SIZE, recordingID);
@@ -385,6 +407,25 @@ public final class EDFHeader
 		putIntoBuffer(bb, DURATION_DATA_RECORDS_SIZE, durationOfRecords, df);
 		putIntoBuffer(bb, NUMBER_OF_CHANELS_SIZE, numberOfChannels);
 
+		System.out.println("Channel Labels " + channelLabels);
+		System.out.println("Channel Labels Size " + LABEL_OF_CHANNEL_SIZE);
+		System.out.println("Transducer Type" + transducerTypes);
+		System.out.println("Transducer Type Size " + TRANSDUCER_TYPE_SIZE);
+		System.out.println("Physical Dimension " + dimensions);
+		System.out.println("Physical Dimension Size " + PHYSICAL_DIMENSION_OF_CHANNEL_SIZE);
+		System.out.println("Physical Min " + minInUnits);
+		System.out.println("Physical Min Size " + PHYSICAL_MIN_IN_UNITS_SIZE);
+		System.out.println("Physical Max " + maxInUnits);
+		System.out.println("Physical Max Size " + PHYSICAL_MAX_IN_UNITS_SIZE);
+		System.out.println("Digital Min " + digitalMin);
+		System.out.println("Digital Min Size " + DIGITAL_MIN_SIZE);
+		System.out.println("Digital Max " + digitalMax);
+		System.out.println("Digital Max Size " + DIGITAL_MAX_SIZE);
+		System.out.println("Prefiltering " + prefilterings);
+		System.out.println("Prefiltering Size " + PREFILTERING_SIZE);
+		System.out.println("Number of Samples " + numberOfSamples);
+		System.out.println("Number of Samples Size " + NUMBER_OF_SAMPLES_SIZE);
+		System.out.println("Reserveds " + reserveds);
 		putIntoBuffer(bb, LABEL_OF_CHANNEL_SIZE, channelLabels);
 		putIntoBuffer(bb, TRANSDUCER_TYPE_SIZE, transducerTypes);
 		putIntoBuffer(bb, PHYSICAL_DIMENSION_OF_CHANNEL_SIZE, dimensions);
@@ -461,16 +502,38 @@ public final class EDFHeader
 
 	private static void putIntoBuffer(ByteBuffer bb, int length, String value)
 	{
-
-		ByteBuffer valueBuffer = ByteBuffer.allocate(length);
+		// Convert value to bytes using the specified charset
+	    byte[] valueBytes = value.getBytes(EDFConstants.CHARSET);
+	    
+	    
+	    
+	    // Need to truncate the length of the string to fit into bytes allocated for header section
+	    if (valueBytes.length > length) {
+	    	System.out.println("Value Length (" + valueBytes.length + ") exceeds buffer length (" + length + "). Truncating value. ");
+	    	valueBytes = Arrays.copyOf(valueBytes, length);
+	    }
+	    
+	    
+	    ByteBuffer valueBuffer = ByteBuffer.allocate(length);
 		// System.out.println("lenght allocated: " + length + "for value: " +
 		// value);
-		valueBuffer.put(value.getBytes(EDFConstants.CHARSET));
-		while (valueBuffer.position() < length)
-			valueBuffer.put((byte) 0x20);
-
+		System.out.println("Length allocated: " + length);
+		System.out.println("Value:  " + value);
+		System.out.println("Value bytes length: " + valueBytes.length);
+		valueBuffer.put(valueBytes);
+		
+		// Need to add spaces to get the correct length for shorter strings
+		while (valueBuffer.position() < length) {
+		valueBuffer.put((byte) 0x20);
+		}
+		
+		//valueBuffer.limit(length);
 		valueBuffer.rewind();
+		
+
 		bb.put(valueBuffer);
+		
+		System.out.println("Buffer after put: position=" + bb.position() + ", remaining=" + bb.remaining());
 		// System.out.println("valueBuffer: " + valueBuffer.capacity());
 	}
 

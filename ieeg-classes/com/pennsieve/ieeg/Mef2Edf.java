@@ -406,6 +406,27 @@ public class Mef2Edf {
 							scaledValue = scaledValue
 									* (Short.MAX_VALUE - Short.MIN_VALUE)
 									+ Short.MIN_VALUE;
+							
+							//Addition of debugging statements
+							System.out.println("Original Value: " + blocksToWrite.values[i]);
+							System.out.println("Scaled Value: " + scaledValue);
+							System.out.println("minMefValue: " + minMefValue);
+							System.out.println("maxMefValue: " + maxMefValue);
+							
+							// added this to clmap the value to be within the short range
+							if (scaledValue > Short.MAX_VALUE) {
+								scaledValue = Short.MAX_VALUE;
+							} else if (scaledValue < Short.MIN_VALUE) {
+								scaledValue = Short.MIN_VALUE;
+							}
+							
+							// Ensure the value is within the range of short before casting 
+							//if (scaledValue < Short.MIN_VALUE || scaledValue > Short.MAX_VALUE) {
+							//	System.out.println("Value out of range: " + scaledValue);
+							//	throw new IllegalArgumentException("Value " + scaledValue + " out of range for short");
+							//}
+							
+							// end of what was added
 							final Integer digitalValue = Integer
 									.valueOf(Shorts.checkedCast(Math
 											.round(scaledValue)));
